@@ -98,9 +98,25 @@ public class Transition_Conditions : MonoBehaviour
 
         if (isnotmove)
         {
+            bool isalreadyhere = false;
             GameObject Speedtracker = GameObject.Find("Speedtracker");
-            Speed_script = Speedtracker.AddComponent<Speed_Tresh>();
-            Speed_script.threshold = speed_threshold;
+            Speed_Tresh[] mylist = Speedtracker.GetComponentsInChildren<Speed_Tresh>();
+
+            int i = 0;
+            int length = mylist.Length;
+            while (i < length && !isalreadyhere)
+            {
+                if (mylist[i].threshold == speed_threshold) {
+                    Speed_script = mylist[i];
+                    isalreadyhere = true;
+                }
+            }
+
+            if (!isalreadyhere)
+            {
+                Speed_script = Speedtracker.AddComponent<Speed_Tresh>();
+                Speed_script.threshold = speed_threshold;
+            }
         }
 
         if (inframe_search)
@@ -212,7 +228,6 @@ public class Transition_Conditions : MonoBehaviour
     {
         if (Rig_Handler.currentRig == previousRig)
         {
-            ScreenCapture.CaptureScreenshot(Application.dataPath + "/Data/pictures/" + previousRig.name + " to " + nextRig.name + " - Before.png");
             Rig_Handler.nextRig = nextRig;
             Rig_Handler.transition = true;
         }
